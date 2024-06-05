@@ -1,4 +1,4 @@
-﻿namespace Financial.Manager.Application.Features.Depositos;
+﻿namespace Financial.Manager.Application.Features.Shared;
 
 public interface IEvent
 {

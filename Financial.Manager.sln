@@ -7,9 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{40D047DF-D34
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{200A7624-135F-48BF-82DA-ED736A87D378}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Financial.Manager.Tests", "Financial.Manager.Tests\Financial.Manager.Tests.csproj", "{4F1DBE4E-0075-46AB-8BC9-CA3FDC3F206E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Financial.Manager.Tests", "Financial.Manager.Tests\Financial.Manager.Tests.csproj", "{4F1DBE4E-0075-46AB-8BC9-CA3FDC3F206E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Financial.Manager.Application", "src\Financial.Manager.Application\Financial.Manager.Application.csproj", "{270306AB-4872-4BEF-B051-E6AAE4191B3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Financial.Manager.Application", "src\Financial.Manager.Application\Financial.Manager.Application.csproj", "{270306AB-4872-4BEF-B051-E6AAE4191B3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
