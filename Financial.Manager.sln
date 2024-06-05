@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Financial.Manager.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Financial.Manager.Application", "src\Financial.Manager.Application\Financial.Manager.Application.csproj", "{270306AB-4872-4BEF-B051-E6AAE4191B3E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Financial.Manager.Api", "src\Financial.Manager.Api\Financial.Manager.Api.csproj", "{71DAB0D1-8B61-434D-ACC5-E98B3DD2C6BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{270306AB-4872-4BEF-B051-E6AAE4191B3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{270306AB-4872-4BEF-B051-E6AAE4191B3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{270306AB-4872-4BEF-B051-E6AAE4191B3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71DAB0D1-8B61-434D-ACC5-E98B3DD2C6BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71DAB0D1-8B61-434D-ACC5-E98B3DD2C6BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71DAB0D1-8B61-434D-ACC5-E98B3DD2C6BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71DAB0D1-8B61-434D-ACC5-E98B3DD2C6BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4F1DBE4E-0075-46AB-8BC9-CA3FDC3F206E} = {200A7624-135F-48BF-82DA-ED736A87D378}
 		{270306AB-4872-4BEF-B051-E6AAE4191B3E} = {40D047DF-D348-4DFD-8250-308F29C38E19}
+		{71DAB0D1-8B61-434D-ACC5-E98B3DD2C6BA} = {40D047DF-D348-4DFD-8250-308F29C38E19}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DA2B9F5-4245-429E-9F3E-BC71BFB78AC6}
