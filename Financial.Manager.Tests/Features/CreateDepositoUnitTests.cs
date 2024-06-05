@@ -1,6 +1,7 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using FluentValidation;
+using FluentValidation.Results;
 using FluentValidation.TestHelper;
 using Moq;
 
@@ -9,7 +10,7 @@ public class CreateDepositoHandlerUnitTests
 {
     private readonly IFixture _fixture = new Fixture().Customize(new AutoMoqCustomization { ConfigureMembers = true });
     private readonly CreateDepositoHandler _handler;
-    private CreateDepositoCommand _command;
+    private readonly CreateDepositoCommand _command;
     private readonly Guid _idContaCliente = Guid.NewGuid();
     private readonly decimal _valorDeposito = 100.25M;
     private readonly ContaCliente contaCliente = new ContaCliente();
@@ -27,6 +28,10 @@ public class CreateDepositoHandlerUnitTests
         _fixture.Freeze<Mock<IContaClienteRepository>>()
                 .Setup(x => x.GetAsync(_idContaCliente, cancellationToken))
                 .ReturnsAsync(contaCliente);
+
+        _fixture.Freeze<Mock<IValidator<CreateDepositoCommand>>>()
+                .Setup(x => x.ValidateAsync(_command, cancellationToken))
+                .ReturnsAsync(new ValidationResult());
 
         _handler = _fixture.Create<CreateDepositoHandler>();
     }
@@ -149,37 +154,43 @@ public class ContaCliente
     }
 }
 
-public record CreateDepositoCommand(Guid IdContaCliente, decimal Valor);
-
-//public interface IDepositoHandler
-//{
-//    string Handle(Deposito deposito);
-//}
-
-public class CreateDepositoHandler : Handler<string> //: IDepositoHandler
+public static class CreateDepositoUserCase
 {
-    private readonly IContaClienteRepository _contaClienteRepository;
-    private readonly IValidator<CreateDepositoCommand> _validator;
+    public record Command(Guid IdContaCliente, decimal Valor);
 
-    public CreateDepositoHandler(IContaClienteRepository contaClienteRepository,
-        IValidator<CreateDepositoCommand> validator)
+    public class CreateDepositoCommandValidator : AbstractValidator<Command>
     {
-        _contaClienteRepository = contaClienteRepository;
-        _validator = validator;
+        public CreateDepositoCommandValidator()
+        {
+            RuleFor(x => x.IdContaCliente).NotEmpty();
+            RuleFor(x => x.Valor).NotEmpty();
+        }
     }
 
-    public async Task<HandlerResult<string>> HandleAsync(CreateDepositoCommand deposito, CancellationToken cancellationToken = default)
+    public class Handler : Handler<string> //: IDepositoHandler
     {
+        private readonly IContaClienteRepository _contaClienteRepository;
+        private readonly IValidator<Command> _validator;
 
-        var validation = await _validator.ValidateAsync(deposito, cancellationToken);
-        //if (!validation.IsValid) return validation.ToFailResult();
-        if (!validation.IsValid) return Falha(MensagemErro.ContaNaoEncontrada.Mensagem);
-        var contaCliente = await _contaClienteRepository.GetAsync(deposito.IdContaCliente, cancellationToken);
-        if (contaCliente == null) return Falha(MensagemErro.ContaNaoEncontrada.Mensagem);
-        if (contaCliente.Bloqueada) return Falha(MensagemErro.ContaBloqueada.Mensagem);
-        //if (contaCliente.Saldo < deposito.Valor) return MensagemErro.SaldoInsuficiente.Mensagem;
-        contaCliente.Depositar(deposito.Valor);
-        return Sucesso(MensagemSucesso.DepositoRealizado.Mensagem);
+        public Handler(IContaClienteRepository contaClienteRepository,
+            IValidator<Command> validator)
+        {
+            _contaClienteRepository = contaClienteRepository;
+            _validator = validator;
+        }
+
+        public async Task<HandlerResult<string>> HandleAsync(Command deposito, CancellationToken cancellationToken = default)
+        {
+            var validation = await _validator.ValidateAsync(deposito, cancellationToken);
+            //if (!validation.IsValid) return validation.ToFailResult();
+            if (!validation.IsValid) return Falha(validation!.ToString(","));
+            var contaCliente = await _contaClienteRepository.GetAsync(deposito.IdContaCliente, cancellationToken);
+            if (contaCliente == null) return Falha(MensagemErro.ContaNaoEncontrada.Mensagem);
+            if (contaCliente.Bloqueada) return Falha(MensagemErro.ContaBloqueada.Mensagem);
+            //if (contaCliente.Saldo < deposito.Valor) return MensagemErro.SaldoInsuficiente.Mensagem;
+            contaCliente.Depositar(deposito.Valor);
+            return Sucesso(MensagemSucesso.DepositoRealizado.Mensagem);
+        }
     }
 }
 
@@ -193,10 +204,6 @@ public abstract class Handler<T> where T : class
     {
         return new HandlerResult<T>() { Sucesso = false, Data = message };
     }
-    //public static HandlerResult<T> Falha(FluentValidation.Results.ValidationResult validationResult)
-    //{
-    //    return new HandlerResult<T>() { Sucesso = false, Data = message };
-    //}
 }
 
 public class HandlerResult<T> where T : class
@@ -235,14 +242,5 @@ public static class MensagemErro
     public static class SaldoInsuficiente
     {
         public static string Mensagem => "Saldo insuficiente.";
-    }
-}
-
-public class CreateDepositoCommandValidator : AbstractValidator<CreateDepositoCommand>
-{
-    public CreateDepositoCommandValidator()
-    {
-        RuleFor(x => x.IdContaCliente).NotEmpty();
-        RuleFor(x => x.Valor).NotEmpty();
     }
 }
