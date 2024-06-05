@@ -28,7 +28,31 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     #- name: Run
     #  run: dotnet run --project src/Financial.Manager.Api/Financial.Manager.Api.csproj --urls=http://localhost:7143/
+    - name: Run k6 local test - Basic Test
+      uses: grafana/k6-action@v0.3.1
+      with:
+        filename: k6/basic-test.js
+    - name: Run k6 local test - Load Test
+      uses: grafana/k6-action@v0.3.1
+      with:
+        filename: k6/load-test.js
     - name: Run k6 local test - Smoke Test
       uses: grafana/k6-action@v0.3.1
       with:
         filename: k6/smoke-test.js
+    - name: Run k6 local test - Soak Test
+      uses: grafana/k6-action@v0.3.1
+      with:
+        filename: k6/soak-test.js
+    - name: Run k6 local test - Spike Test
+      uses: grafana/k6-action@v0.3.1
+      with:
+        filename: k6/spike-test.js
+    - name: Run k6 local test - Stress Test
+      uses: grafana/k6-action@v0.3.1
+      with:
+        filename: k6/stress-test.js
+    - name: Run k6 local test - UserFlow Test
+      uses: grafana/k6-action@v0.3.1
+      with:
+        filename: k6/userflow-test.js
