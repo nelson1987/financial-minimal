@@ -26,6 +26,8 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - name: Run
+      run: dotnet run --urls=http://localhost:7143/
     - name: Run k6 local test - Smoke Test
       uses: grafana/k6-action@v0.3.1
       with:
