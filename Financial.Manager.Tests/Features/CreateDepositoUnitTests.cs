@@ -9,8 +9,8 @@ namespace Financial.Manager.Tests.Features;
 public class CreateDepositoHandlerUnitTests
 {
     private readonly IFixture _fixture = new Fixture().Customize(new AutoMoqCustomization { ConfigureMembers = true });
-    private readonly CreateDepositoHandler _handler;
-    private readonly CreateDepositoCommand _command;
+    private readonly CreateDepositoUserCase.Handler _handler;
+    private readonly CreateDepositoUserCase.Command _command;
     private readonly Guid _idContaCliente = Guid.NewGuid();
     private readonly decimal _valorDeposito = 100.25M;
     private readonly ContaCliente contaCliente = new ContaCliente();
@@ -18,7 +18,7 @@ public class CreateDepositoHandlerUnitTests
 
     public CreateDepositoHandlerUnitTests()
     {
-        _command = new CreateDepositoCommand(_idContaCliente, _valorDeposito);
+        _command = new CreateDepositoUserCase.Command(_idContaCliente, _valorDeposito);
         contaCliente = _fixture.Build<ContaCliente>()
             .With(x => x.Id, _idContaCliente)
             .With(x => x.Bloqueada, false)
@@ -29,11 +29,11 @@ public class CreateDepositoHandlerUnitTests
                 .Setup(x => x.GetAsync(_idContaCliente, cancellationToken))
                 .ReturnsAsync(contaCliente);
 
-        _fixture.Freeze<Mock<IValidator<CreateDepositoCommand>>>()
+        _fixture.Freeze<Mock<IValidator<CreateDepositoUserCase.Command>>>()
                 .Setup(x => x.ValidateAsync(_command, cancellationToken))
                 .ReturnsAsync(new ValidationResult());
 
-        _handler = _fixture.Create<CreateDepositoHandler>();
+        _handler = _fixture.Create<CreateDepositoUserCase.Handler>();
     }
 
     [Fact]
@@ -110,15 +110,15 @@ public class CreateDepositoHandlerUnitTests
 public class CreateDepositoValidatorUnitTests
 {
     private readonly IFixture _fixture = new Fixture().Customize(new AutoMoqCustomization { ConfigureMembers = true });
-    private CreateDepositoCommand _command;
-    private readonly IValidator<CreateDepositoCommand> _validator;
+    private CreateDepositoUserCase.Command _command;
+    private readonly IValidator<CreateDepositoUserCase.Command> _validator;
     private readonly Guid _idContaCliente = Guid.NewGuid();
     private readonly decimal _valorDeposito = 100.25M;
 
     public CreateDepositoValidatorUnitTests()
     {
-        _command = new CreateDepositoCommand(_idContaCliente, _valorDeposito);
-        _validator = _fixture.Create<CreateDepositoCommandValidator>();
+        _command = new CreateDepositoUserCase.Command(_idContaCliente, _valorDeposito);
+        _validator = _fixture.Create<CreateDepositoUserCase.Validator>();
     }
 
     [Fact]
@@ -158,9 +158,9 @@ public static class CreateDepositoUserCase
 {
     public record Command(Guid IdContaCliente, decimal Valor);
 
-    public class CreateDepositoCommandValidator : AbstractValidator<Command>
+    public class Validator : AbstractValidator<Command>
     {
-        public CreateDepositoCommandValidator()
+        public Validator()
         {
             RuleFor(x => x.IdContaCliente).NotEmpty();
             RuleFor(x => x.Valor).NotEmpty();
